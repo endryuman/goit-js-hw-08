@@ -1,26 +1,29 @@
 import throttle from 'lodash.throttle';
-const form = document.querySelector('.feedback-form');
-const lsKey = 'feedback-form-state';
 
-form.addEventListener('input', throttle(handleInput, 500));
-form.addEventListener('submit', submitEvent);
+const list = document.querySelector('.feedback-form');
+const KeyIn = 'feedback-form-state';
+list.addEventListener('input', throttle(inputInfo, 500));
+list.addEventListener('submit', submitEvent);
 window.addEventListener('load', refreshForm);
-const formInfo = {};
 
-function handleInput(event) {
+let formInfo = {};
+
+function inputInfo(event) {
   formInfo[event.target.name] = event.target.value.trim();
-  localStorage.setItem(lsKey, JSON.stringify(formInfo));
+  localStorage.setItem(KeyIn, JSON.stringify(formInfo));
 }
 
 function submitEvent(event) {
   event.preventDefault();
-  localStorage.removeItem(lsKey);
+  localStorage.removeItem(KeyIn);
   console.log(formInfo);
+  formInfo = {};
   event.target.reset();
 }
+
 function refreshForm() {
   try {
-    const savedData = localStorage.getItem(lsKey);
+    const savedData = localStorage.getItem(KeyIn);
     if (!savedData) return;
     formInfo = JSON.parse(savedData);
     Object.entries(formInfo).forEach(([key, val]) => {
